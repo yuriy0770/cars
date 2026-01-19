@@ -1,0 +1,467 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}AutoVault | Премиум автомобильная база{% endblock %}
+
+{% block content %}
+<!-- Герой секция с параллаксом -->
+<section class="py-5 mt-5 overflow-hidden">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4 typewriter" data-text="Мир автомобилей в деталях">
+                    Мир автомобилей в деталях
+                </h1>
+                <p class="lead text-secondary mb-4 animate-on-scroll">
+                    От классических спортивных автомобилей до инновационных электрокаров.
+                    Подробные обзоры, технические характеристики и профессиональная аналитика.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'cars:category' %}" class="btn btn-primary btn-lg px-4 animate__animated animate__pulse animate__infinite animate__slower">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Исследовать каталог
+                    </a>
+                    <a href="#" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="bi bi-search me-2"></i>Расширенный поиск
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="position-relative parallax-element" data-speed="0.2">
+                    <div class="card border-0 overflow-hidden shadow-lg">
+                        <img src="{% static 'images/hero-main.jpg' %}" class="card-img-top" alt="Премиум автомобиль">
+                        <div class="position-absolute bottom-0 start-0 end-0 p-4" style="background: linear-gradient(transparent, rgba(15, 15, 26, 0.9));">
+                            <h5 class="mb-2 gradient-text">Новые поступления</h5>
+                            <small class="text-secondary">+12 новых моделей на этой неделе</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Анимированная статистика -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number counter">427</div>
+                    <div class="text-secondary">Автомобилей в базе</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number counter">58</div>
+                    <div class="text-secondary">Производителей</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number counter">1,250+</div>
+                    <div class="text-secondary">Технических параметров</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number counter">24</div>
+                    <div class="text-secondary">Эксперта аналитики</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Популярные категории с hover-эффектами -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3 gradient-text animate-on-scroll">Популярные категории</h2>
+                <p class="lead text-secondary">Выберите интересующий вас сегмент автомобилей</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Категория 1 -->
+            <div class="col-md-3 col-sm-6">
+                <a href="{% url 'cars:category' %}" class="text-decoration-none">
+                    <div class="card h-100 animate-on-scroll">
+                        <div class="position-relative overflow-hidden">
+                            <img src="{% static 'images/cat-sport.jpg' %}" class="card-img-top" alt="Суперкары">
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge badge-gradient animate__animated animate__bounceIn">25 моделей</span>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 m-3">
+                                <i class="bi bi-arrow-right-circle fs-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Суперкары</h5>
+                            <p class="card-text text-secondary small">
+                                Ferrari, Lamborghini, McLaren — эксклюзивные высокопроизводительные автомобили.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Категория 2 -->
+            <div class="col-md-3 col-sm-6">
+                <a href="{% url 'cars:category' %}" class="text-decoration-none">
+                    <div class="card h-100 animate-on-scroll" style="animation-delay: 0.2s;">
+                        <div class="position-relative overflow-hidden">
+                            <img src="{% static 'images/cat-electric.jpg' %}" class="card-img-top" alt="Электрокары">
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge badge-gradient">18 моделей</span>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 m-3">
+                                <i class="bi bi-arrow-right-circle fs-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Электрокары</h5>
+                            <p class="card-text text-secondary small">
+                                Tesla, Rimac, Lucid — инновационные электрические автомобили будущего.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Категория 3 -->
+            <div class="col-md-3 col-sm-6">
+                <a href="{% url 'cars:category' %}" class="text-decoration-none">
+                    <div class="card h-100 animate-on-scroll" style="animation-delay: 0.4s;">
+                        <div class="position-relative overflow-hidden">
+                            <img src="{% static 'images/cat-suv.jpg' %}" class="card-img-top" alt="Внедорожники">
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge badge-gradient">32 модели</span>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 m-3">
+                                <i class="bi bi-arrow-right-circle fs-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Внедорожники</h5>
+                            <p class="card-text text-secondary small">
+                                Mercedes G-Class, Land Rover, BMW X5 — мощные автомобили для бездорожья.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Категория 4 -->
+            <div class="col-md-3 col-sm-6">
+                <a href="{% url 'cars:category' %}" class="text-decoration-none">
+                    <div class="card h-100 animate-on-scroll" style="animation-delay: 0.6s;">
+                        <div class="position-relative overflow-hidden">
+                            <img src="{% static 'images/cat-gt.jpg' %}" class="card-img-top" alt="Гран Туризмо">
+                            <div class="position-absolute top-0 start-0 m-3">
+                                <span class="badge badge-gradient">22 модели</span>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 m-3">
+                                <i class="bi bi-arrow-right-circle fs-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Гран Туризмо</h5>
+                            <p class="card-text text-secondary small">
+                                Aston Martin, Bentley — роскошные автомобили для путешествий.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Новые поступления с каруселью эффектов -->
+<section class="py-5" style="background: rgba(26, 26, 46, 0.5);">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3 gradient-text">Новые поступления</h2>
+                <p class="lead text-secondary">Недавно добавленные автомобили в нашу базу</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Авто 1 -->
+            <div class="col-md-4">
+                <div class="card animate-on-scroll">
+                    <div class="position-relative overflow-hidden">
+                        <img src="{% static 'images/new-1.jpg' %}" class="card-img-top" alt="Porsche Taycan">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-success animate__animated animate__heartBeat animate__infinite animate__slower">Новинка</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">Porsche Taycan Turbo S</h5>
+                        <p class="card-text text-secondary small mb-3">
+                            Полностью электрический спорткар с рекордной динамикой.
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-primary fw-bold">761 л.с.</small>
+                                <small class="text-secondary ms-2">2.8с до 100</small>
+                            </div>
+                            <small class="text-accent">$185,000</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Авто 2 -->
+            <div class="col-md-4">
+                <div class="card animate-on-scroll" style="animation-delay: 0.2s;">
+                    <div class="position-relative overflow-hidden">
+                        <img src="{% static 'images/new-2.jpg' %}" class="card-img-top" alt="Mercedes-AMG">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-success">Новинка</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">Mercedes-AMG GT 63 S</h5>
+                        <p class="card-text text-secondary small mb-3">
+                            4-дверный купе с характером настоящего спорткара.
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-primary fw-bold">639 л.с.</small>
+                                <small class="text-secondary ms-2">3.2с до 100</small>
+                            </div>
+                            <small class="text-accent">$165,000</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Авто 3 -->
+            <div class="col-md-4">
+                <div class="card animate-on-scroll" style="animation-delay: 0.4s;">
+                    <div class="position-relative overflow-hidden">
+                        <img src="{% static 'images/new-3.jpg' %}" class="card-img-top" alt="BMW M4">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-success">Новинка</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">BMW M4 Competition</h5>
+                        <p class="card-text text-secondary small mb-3">
+                            Легендарное купе в новом поколении с агрессивным дизайном.
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-primary fw-bold">510 л.с.</small>
+                                <small class="text-secondary ms-2">3.9с до 100</small>
+                            </div>
+                            <small class="text-accent">$95,000</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Анимированные фичи -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4 gradient-text animate-on-scroll">Эксклюзивные возможности</h2>
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-4 animate-on-scroll">
+                        <div class="bg-primary rounded-circle p-3 me-3 animate__animated animate__rubberBand">
+                            <i class="bi bi-graph-up-arrow fs-4 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">3D модели автомобилей</h5>
+                            <p class="text-secondary small mb-0">Интерактивное вращение и детальный осмотр</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 animate-on-scroll" style="animation-delay: 0.1s;">
+                        <div class="bg-primary rounded-circle p-3 me-3">
+                            <i class="bi bi-soundwave fs-4 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Звуки двигателей</h5>
+                            <p class="text-secondary small mb-0">Аудиозаписи реальных звуков работы двигателей</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center animate-on-scroll" style="animation-delay: 0.2s;">
+                        <div class="bg-primary rounded-circle p-3 me-3">
+                            <i class="bi bi-camera-video fs-4 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">360° видео обзоры</h5>
+                            <p class="text-secondary small mb-0">Панорамные видео с возможностью обзора салона</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card animate-on-scroll" style="animation-delay: 0.3s;">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3 gradient-text">Быстрый поиск</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Диапазон мощности</label>
+                            <div class="d-flex align-items-center">
+                                <input type="number" class="form-control bg-dark border-secondary text-white me-2"
+                                       placeholder="От" value="300" id="powerMin">
+                                <span class="text-secondary mx-2">—</span>
+                                <input type="number" class="form-control bg-dark border-secondary text-white"
+                                       placeholder="До" value="800" id="powerMax">
+                            </div>
+                            <div class="mt-2">
+                                <input type="range" class="form-range" min="100" max="1500" step="50"
+                                       value="300" id="powerRange">
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-secondary">100 л.с.</small>
+                                    <small class="text-secondary">1500 л.с.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-secondary">Ценовой диапазон</label>
+                            <div class="d-flex align-items-center mb-2">
+                                <small class="text-secondary me-2">$50K</small>
+                                <input type="range" class="form-range flex-grow-1" min="50" max="5000" step="50" value="500">
+                                <small class="text-secondary ms-2">$5M</small>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100 animate__animated animate__tada" id="searchBtn">
+                            <i class="bi bi-search me-2"></i>Найти автомобили
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Анимированный CTA -->
+<section class="py-5" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mb-4 gradient-text animate__animated animate__pulse animate__infinite animate__slower">
+                    Начните исследование сегодня
+                </h2>
+                <p class="lead text-secondary mb-5 animate-on-scroll">
+                    Присоединяйтесь к сообществу автолюбителей и профессионалов.
+                    Получите доступ к эксклюзивным данным и аналитике.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a href="{% url 'cars:category' %}" class="btn btn-primary btn-lg px-5 animate__animated animate__bounce">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Начать сейчас
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Дополнительные анимации -->
+<style>
+    /* Анимация пульсации для особых элементов */
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 30px rgba(236, 72, 153, 0.6);
+        }
+    }
+
+    .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* Анимация вращения для иконок */
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .rotate-slow {
+        animation: rotate 20s linear infinite;
+    }
+
+    .rotate-fast {
+        animation: rotate 5s linear infinite;
+    }
+
+    /* Анимация плавающих элементов */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+</style>
+
+<script>
+    // Дополнительные анимации для элементов
+    document.addEventListener('DOMContentLoaded', function() {
+        // Анимация для кнопки поиска
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                this.classList.add('animate__rubberBand');
+                setTimeout(() => {
+                    this.classList.remove('animate__rubberBand');
+                }, 1000);
+            });
+        }
+
+        // Связь range и input для мощности
+        const powerMin = document.getElementById('powerMin');
+        const powerMax = document.getElementById('powerMax');
+        const powerRange = document.getElementById('powerRange');
+
+        if (powerRange && powerMin) {
+            powerRange.addEventListener('input', function() {
+                powerMin.value = this.value;
+            });
+
+            powerMin.addEventListener('input', function() {
+                powerRange.value = this.value;
+            });
+        }
+
+        // Анимация для всех карточек при наведении
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('animate__pulse');
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('animate__pulse');
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

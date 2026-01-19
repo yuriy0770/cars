@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutoVault | Премиум автомобильная база{% endblock %}</title>
+
+    <!-- Bootstrap 5 Dark -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Animate.css для анимаций -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Стили -->
+    <style>
+        :root {
+            --primary: #8b5cf6;      /* фиолетовый */
+            --primary-dark: #7c3aed; /* темно-фиолетовый */
+            --secondary: #ec4899;    /* розовый */
+            --accent: #f59e0b;       /* янтарный */
+            --dark: #0f0f1a;         /* очень темный */
+            --darker: #0a0a12;       /* почти черный */
+            --light: #f8fafc;        /* светлый текст */
+            --border: #2d2d3d;       /* цвет границ */
+            --card-bg: #1a1a2e;      /* фон карточек */
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Анимированный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Навигация */
+        .navbar {
+            background: rgba(15, 15, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 1rem 0;
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled {
+            padding: 0.7rem 0;
+            background: rgba(15, 15, 26, 0.95);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: #cbd5e1 !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        /* Кнопки */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            transition: all 0.5s;
+        }
+
+        .btn-primary:hover::after {
+            left: 130%;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-primary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Карточки */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+        /* Заголовки */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            color: var(--light);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: gradientText 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Бейджи */
+        .badge-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            font-weight: 600;
+        }
+
+        /* Подвал */
+        footer {
+            background: rgba(15, 15, 26, 0.9);
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--light);
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+        /* Анимация появления */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Кастомные классы */
+        .stat-card {
+            background: linear-gradient(135deg, var(--card-bg), #1e1e3e);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .stat-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        /* Плавный скролл */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--primary-dark), var(--secondary));
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<!-- Навигация -->
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand animate__animated animate__fadeInLeft" href="{% url 'cars:index' %}">
+            <i class="bi bi-gem me-2"></i>AutoVault
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'cars:index' %}">
+                        Главная
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'categories' in request.path %}active{% endif %}" href="{% url 'cars:category' %}">
+                        Каталог
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'about' in request.path %}active{% endif %}" href="{% url 'cars:about' %}">
+                        О проекте
+                    </a>
+                </li>
+
+                {% if user.is_authenticated %}
+                <!-- Для авторизованных пользователей -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'users:profile' %}">
+                                <i class="bi bi-person me-2"></i>Мой профиль
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'users:profile_edit' %}">
+                                <i class="bi bi-pencil me-2"></i>Редактировать профиль
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'users:logout' %}">
+                                <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <!-- Для неавторизованных пользователей -->
+                <li class="nav-item">
+                    <a class="nav-link {% if 'login' in request.path %}active{% endif %}" href="{% url 'users:login' %}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                    </a>
+                </li>
+                <li class="nav-item ms-2">
+                    <a href="{% url 'users:register' %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-person-plus me-1"></i>Регистрация
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Основной контент -->
+<main class="pt-5 mt-4">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Подвал -->
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h4 class="mb-4">
+                    <i class="bi bi-gem me-2"></i><span class="gradient-text">AutoVault</span>
+                </h4>
+                <p class="text-secondary">
+                    Премиум база автомобильных данных.
+                    Эксклюзивные обзоры, детальные характеристики, профессиональная аналитика.
+                </p>
+                <div class="mt-4">
+                    <a href="#" class="btn btn-outline-primary btn-sm me-2 animate__animated animate__bounceIn">
+                        <i class="bi bi-telegram"></i>
+                    </a>
+                    <a href="#"
+                       class="btn btn-outline-primary btn-sm me-2 animate__animated animate__bounceIn animate__delay-1s">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                    <a href="#"
+                       class="btn btn-outline-primary btn-sm animate__animated animate__bounceIn animate__delay-2s">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4">
+                <h5 class="mb-3">Каталог</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'cars:category' %}">Все категории</a></li>
+                    <li class="mb-2"><a href="#">Спорткары</a></li>
+                    <li class="mb-2"><a href="#">Электрокары</a></li>
+                    <li class="mb-2"><a href="#">Внедорожники</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="mb-3">Компания</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#">О проекте</a></li>
+                    <li class="mb-2"><a href="#">Контакты</a></li>
+                    <li class="mb-2"><a href="#">Партнеры</a></li>
+                    <li class="mb-2"><a href="#">Вакансии</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="mb-3">Контакты</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="bi bi-envelope text-primary me-2"></i>
+                        <span class="text-secondary">contact@autovault.ru</span>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-telephone text-primary me-2"></i>
+                        <span class="text-secondary">+7 (495) 123-45-67</span>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-clock text-primary me-2"></i>
+                        <span class="text-secondary">Пн-Пт: 9:00-18:00</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-4 border-secondary">
+
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-secondary">
+                    © 2024 AutoVault. Все данные защищены.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-decoration-none me-3">Политика</a>
+                <a href="#" class="text-decoration-none">Условия</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Скрипты с анимациями -->
+<script>
+    // Эффект навигации при скролле
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    // Анимация появления элементов
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Наблюдаем за всеми карточками, заголовками, стат-картами
+    document.querySelectorAll('.card, h1, h2, h3, .stat-card, .animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Анимация параллакса для фона
+    document.addEventListener('mousemove', function(e) {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        document.querySelectorAll('.parallax-element').forEach(el => {
+            const speed = el.dataset.speed || 0.1;
+            const xOffset = (x - 0.5) * 20 * speed;
+            const yOffset = (y - 0.5) * 20 * speed;
+            el.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+        });
+    });
+
+    // Анимация чисел в статистике
+    function animateCounter(element, target, duration) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+                element.textContent = target + '+';
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(start) + '+';
+            }
+        }, 16);
+    }
+
+    // Запускаем анимацию счетчиков при скролле
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.textContent);
+                animateCounter(counter, target, 2000);
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(counter => {
+        counterObserver.observe(counter);
+    });
+
+    // Эффект набора текста для заголовков
+    function typeWriter(element, text, speed = 50) {
+        let i = 0;
+        element.innerHTML = '';
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    // Запускаем для заголовков с классом typewriter
+    document.querySelectorAll('.typewriter').forEach(el => {
+        if (el.dataset.text) {
+            typeWriter(el, el.dataset.text);
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+const currentPath = window.location.pathname;
+const navLinks = document.querySelectorAll('.nav-link');
+
+navLinks.forEach(link => {
+    const linkPath = link.getAttribute('href');
+    if (currentPath === linkPath ||
+        (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+        link.classList.add('active');
+    }
+});
+});
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

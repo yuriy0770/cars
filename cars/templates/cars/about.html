@@ -1,0 +1,738 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}AutoVault | О проекте{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Фон страницы */
+    .about-page {
+        background:
+            linear-gradient(135deg, #0a0a12 0%, #1a1a2e 50%, #0f0f1a 100%),
+            url("{% static 'images/bg_pattern.png' %}") repeat;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Анимированный фон */
+    .about-bg-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .floating-gear {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: url("{% static 'images/gear_icon.png' %}") center/contain no-repeat;
+        opacity: 0.05;
+        animation: rotateGear 30s linear infinite;
+    }
+
+    .floating-gear:nth-child(1) {
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+
+    .floating-gear:nth-child(2) {
+        top: 70%;
+        right: 8%;
+        animation-delay: 15s;
+        animation-direction: reverse;
+    }
+
+    @keyframes rotateGear {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Герой секция */
+    .about-hero {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 6rem 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Декоративная линия */
+    .decor-line {
+        position: relative;
+        margin: 4rem 0;
+    }
+
+    .decor-line::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            var(--primary) 15%,
+            var(--secondary) 50%,
+            var(--primary) 85%,
+            transparent 100%
+        );
+        transform: translateY(-50%);
+    }
+
+    .decor-line span {
+        background: var(--dark);
+        padding: 0 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Карточки фич */
+    .feature-card {
+        background: rgba(26, 26, 46, 0.8);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 2.5rem;
+        height: 100%;
+        transition: all 0.4s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+    }
+
+    .feature-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    /* Команда */
+    .team-member {
+        text-align: center;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .team-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        border: 3px solid transparent;
+        background: linear-gradient(45deg, var(--primary), var(--secondary)) border-box;
+        padding: 3px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .team-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+    }
+
+    .team-member:hover .team-avatar {
+        border-color: var(--primary);
+    }
+
+    /* Статистика */
+    .stats-section {
+        background:
+            linear-gradient(rgba(15, 15, 26, 0.9), rgba(15, 15, 26, 0.9)),
+            url("{% static 'images/stats_bg.jpg' %}") center/cover no-repeat;
+        border-radius: 30px;
+        padding: 5rem;
+        margin: 4rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg,
+            rgba(139, 92, 246, 0.1),
+            rgba(236, 72, 153, 0.1)
+        );
+        z-index: 1;
+    }
+
+    .stats-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Временная шкала */
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 4rem auto;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom,
+            transparent 0%,
+            var(--primary) 10%,
+            var(--secondary) 50%,
+            var(--primary) 90%,
+            transparent 100%
+        );
+        transform: translateX(-50%);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 4rem;
+        width: 45%;
+    }
+
+    .timeline-item:nth-child(odd) {
+        left: 0;
+        text-align: right;
+        padding-right: 4rem;
+    }
+
+    .timeline-item:nth-child(even) {
+        left: 55%;
+        padding-left: 4rem;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        top: 0;
+        z-index: 2;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+        right: -10px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+        left: -10px;
+    }
+
+    /* Анимации */
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    /* Секция CTA */
+    .about-cta {
+        background: linear-gradient(135deg,
+            rgba(139, 92, 246, 0.1),
+            rgba(236, 72, 153, 0.1)
+        );
+        border-radius: 30px;
+        padding: 4rem;
+        text-align: center;
+        margin-top: 4rem;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    /* Иконки технологий */
+    .tech-stack {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .tech-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .tech-icon:hover {
+        background: rgba(139, 92, 246, 0.2);
+        transform: scale(1.1);
+    }
+
+    .tech-icon i {
+        font-size: 2rem;
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-page py-5">
+    <!-- Анимированный фон -->
+    <div class="about-bg-animation">
+        <div class="floating-gear"></div>
+        <div class="floating-gear"></div>
+    </div>
+
+    <div class="container position-relative" style="z-index: 2;">
+        <!-- Герой секция -->
+        <section class="about-hero fade-in-up">
+            <div class="hero-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <span class="badge badge-gradient px-3 py-2 mb-3">
+                            <i class="bi bi-stars me-2"></i>С 2024 года
+                        </span>
+                        <h1 class="display-2 fw-bold text-white mb-4">
+                            <span class="gradient-text">AutoVault</span> —
+                            <span class="text-white">энциклопедия</span><br>
+                            автомобилей нового поколения
+                        </h1>
+                        <p class="lead text-light mb-4">
+                            Самый полный и технологичный каталог автомобилей.
+                            Мы объединяем технологии, дизайн и экспертизу в одном месте.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{% url 'cars:category' %}" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-car-front me-2"></i>Исследовать каталог
+                            </a>
+                            <a href="#mission" class="btn btn-outline-primary btn-lg px-4">
+                                <i class="bi bi-play-circle me-2"></i>Наша миссия
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5 mt-lg-0">
+                        <div class="card border-0 shadow-lg overflow-hidden">
+                            <img src="{% static 'images/about_hero.jpg' %}"
+                                 alt="AutoVault Platform"
+                                 class="img-fluid rounded-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Декоративная линия -->
+        <div class="decor-line fade-in-up delay-1">
+            <span class="text-light fs-5 fw-semibold">
+                <i class="bi bi-diamond-fill text-primary me-2"></i>Наши ценности
+            </span>
+        </div>
+
+        <!-- Фичи проекта -->
+        <section class="py-5">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="feature-card fade-in-up delay-1">
+                        <div class="feature-icon">
+                            <i class="bi bi-database"></i>
+                        </div>
+                        <h3 class="text-white mb-3">База данных</h3>
+                        <p class="text-secondary">
+                            Самая полная база автомобилей с детальными характеристиками,
+                            обзорами и техническими данными.
+                        </p>
+                        <ul class="list-unstyled text-secondary mt-3">
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>500+ автомобилей</li>
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>1000+ характеристик</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i>Регулярные обновления</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="feature-card fade-in-up delay-2">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h3 class="text-white mb-3">Аналитика</h3>
+                        <p class="text-secondary">
+                            Профессиональная аналитика рынка, сравнение моделей
+                            и прогнозы для инвесторов и автолюбителей.
+                        </p>
+                        <ul class="list-unstyled text-secondary mt-3">
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Сравнение моделей</li>
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Рыночная аналитика</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i>Инвестиционные прогнозы</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="feature-card fade-in-up delay-3">
+                        <div class="feature-icon">
+                            <i class="bi bi-camera-video"></i>
+                        </div>
+                        <h3 class="text-white mb-3">Мультимедиа</h3>
+                        <p class="text-secondary">
+                            360° обзоры, звуки двигателей, интерактивные 3D модели
+                            и эксклюзивные видео от экспертов.
+                        </p>
+                        <ul class="list-unstyled text-secondary mt-3">
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>3D модели</li>
+                            <li class="mb-2"><i class="bi bi-check-circle text-primary me-2"></i>Видео обзоры</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i>Интерактивные туры</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Миссия -->
+        <section id="mission" class="py-5 fade-in-up">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="display-4 fw-bold text-white mb-4">
+                        Наша <span class="gradient-text">миссия</span>
+                    </h2>
+                    <p class="text-light lead mb-4">
+                        Создать самый технологичный и полный автомобильный ресурс,
+                        который станет незаменимым помощником для автолюбителей,
+                        профессионалов и инвесторов.
+                    </p>
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-primary rounded-circle p-2 me-3">
+                                    <i class="bi bi-shield-check text-white"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-white mb-2">Достоверность</h5>
+                                    <p class="text-secondary small mb-0">
+                                        Проверенные данные от официальных источников
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-primary rounded-circle p-2 me-3">
+                                    <i class="bi bi-lightning-charge text-white"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-white mb-2">Инновации</h5>
+                                    <p class="text-secondary small mb-0">
+                                        Используем самые современные технологии
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="card bg-dark border-primary overflow-hidden">
+                        <img src="{% static 'images/mission_image.jpg' %}"
+                             alt="Наша миссия"
+                             class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Статистика -->
+        <section class="stats-section fade-in-up">
+            <div class="stats-content">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="stat-number" data-count="{{ total_cars }}">0</div>
+                        <div class="text-light">Автомобилей</div>
+                    </div>
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="stat-number" data-count="58">0</div>
+                        <div class="text-light">Производителей</div>
+                    </div>
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="stat-number" data-count="24">0</div>
+                        <div class="text-light">Экспертов</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-number" data-count="1500">0</div>
+                        <div class="text-light">Параметров анализа</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Технологический стек -->
+        <section class="py-5 fade-in-up">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold text-white mb-3">
+                    Технологии <span class="gradient-text">AutoVault</span>
+                </h2>
+                <p class="text-light lead">
+                    Современный стек технологий для лучшего пользовательского опыта
+                </p>
+            </div>
+
+            <div class="tech-stack">
+                <div class="tech-icon">
+                    <i class="bi bi-filetype-py"></i>
+                </div>
+                <div class="tech-icon">
+                    <i class="bi bi-filetype-js"></i>
+                </div>
+                <div class="tech-icon">
+                    <i class="bi bi-database"></i>
+                </div>
+                <div class="tech-icon">
+                    <i class="bi bi-cloud"></i>
+                </div>
+                <div class="tech-icon">
+                    <i class="bi bi-braces"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Временная шкала -->
+        <section class="py-5 fade-in-up">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold text-white mb-3">
+                    Наш <span class="gradient-text">путь</span>
+                </h2>
+                <p class="text-light lead">
+                    От идеи до реализации
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card bg-dark border-primary p-4">
+                        <div class="card-body">
+                            <h5 class="text-white mb-2">Январь 2024</h5>
+                            <h4 class="gradient-text">Основание проекта</h4>
+                            <p class="text-secondary mb-0">
+                                Идея создания полной автомобильной базы данных
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card bg-dark border-primary p-4">
+                        <div class="card-body">
+                            <h5 class="text-white mb-2">Март 2024</h5>
+                            <h4 class="gradient-text">Разработка платформы</h4>
+                            <p class="text-secondary mb-0">
+                                Создание ядра системы и базы данных
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card bg-dark border-primary p-4">
+                        <div class="card-body">
+                            <h5 class="text-white mb-2">Июнь 2024</h5>
+                            <h4 class="gradient-text">Запуск бета-версии</h4>
+                            <p class="text-secondary mb-0">
+                                Первые 100 автомобилей в базе
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card bg-dark border-primary p-4">
+                        <div class="card-body">
+                            <h5 class="text-white mb-2">Январь 2025</h5>
+                            <h4 class="gradient-text">Публичный запуск</h4>
+                            <p class="text-secondary mb-0">
+                                Официальный запуск AutoVault
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA секция -->
+        <section class="about-cta fade-in-up">
+            <h2 class="display-5 fw-bold text-white mb-4">
+                Присоединяйтесь к <span class="gradient-text">сообществу</span>
+            </h2>
+            <p class="text-light lead mb-5">
+                Исследуйте мир автомобилей вместе с нами. Подключайтесь к нашей платформе<br>
+                и получайте доступ к эксклюзивным данным и аналитике.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <a href="{% url 'cars:index' %}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-house me-2"></i>На главную
+                </a>
+                <a href="{% url 'cars:category' %}" class="btn btn-outline-primary btn-lg px-5">
+                    <i class="bi bi-car-front me-2"></i>Каталог автомобилей
+                </a>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- JavaScript с анимациями -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Анимация счетчиков
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const counter = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = Math.round(target);
+                    clearInterval(counter);
+                } else {
+                    element.textContent = Math.round(start);
+                }
+            }, 16);
+        }
+
+        // Анимируем статистику при прокрутке
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumbers = document.querySelectorAll('.stat-number');
+                        statNumbers.forEach(stat => {
+                            const target = parseInt(stat.getAttribute('data-count'));
+                            if (!isNaN(target)) {
+                                stat.textContent = '0';
+                                setTimeout(() => {
+                                    animateCounter(stat, target);
+                                }, 300);
+                            }
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(statsSection);
+        }
+
+        // Параллакс эффект для героя
+        const hero = document.querySelector('.about-hero');
+        if (hero) {
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.3;
+                hero.style.backgroundPosition = `center ${rate}px`;
+            });
+        }
+
+        // Анимация карточек при наведении
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+        });
+
+        // Плавный скролл к секциям
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

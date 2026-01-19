@@ -1,0 +1,170 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}AutoVault | Вход{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+    
+    .auth-card {
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-logo {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+    
+    .form-control-auth {
+        background: rgba(15, 15, 26, 0.7);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control-auth:focus {
+        background: rgba(15, 15, 26, 0.9);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        color: white;
+    }
+    
+    .auth-btn {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .auth-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+    }
+    
+    .auth-links {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(139, 92, 246, 0.1);
+    }
+    
+    .auth-links a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .auth-links a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="py-5 mt-5">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <h2 class="text-white mb-2">Вход в аккаунт</h2>
+                    <p class="text-secondary">Войдите, чтобы получить доступ ко всем возможностям</p>
+                </div>
+                
+                <!-- Сообщения -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                
+                <!-- Форма входа -->
+                <form method="POST" action="{% url 'users:login' %}">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Пожалуйста, исправьте ошибки ниже.
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label text-light">
+                            {{ form.username.label }}
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.username.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label text-light">
+                            {{ form.password.label }}
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.password.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+                        <label class="form-check-label text-secondary" for="rememberMe">
+                            Запомнить меня
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn mb-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                    </button>
+                    
+                    <div class="auth-links">
+                        <p class="text-secondary mb-2">
+                            Нет аккаунта? 
+                            <a href="{% url 'users:register' %}">Зарегистрируйтесь</a>
+                        </p>
+                        <p class="mb-0">
+                            <a href="{% url 'users:password_reset' %}">Забыли пароль?</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

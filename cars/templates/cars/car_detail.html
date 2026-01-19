@@ -1,0 +1,519 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}AutoVault | {{ car.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Убираем ограничения по высоте для картинки */
+    .car-image-container {
+        position: relative;
+        width: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+    }
+
+    .car-main-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    .car-image-container:hover .car-main-image {
+        transform: scale(1.02);
+    }
+
+    /* Стили для характеристик */
+    .spec-card {
+        background: rgba(26, 26, 46, 0.8);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .spec-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Стили для описания автомобиля */
+    .car-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #e2e8f0 !important;
+        background: rgba(15, 15, 26, 0.7);
+        border-radius: 15px;
+        padding: 2rem;
+        border-left: 4px solid var(--primary);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        margin: 2rem 0;
+        backdrop-filter: blur(5px);
+    }
+
+    .car-description p {
+        margin-bottom: 1.5rem;
+    }
+
+    .car-description p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Улучшенные стили для заголовка */
+    .car-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Стиль для цены */
+    .car-price {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Контейнер для основного контента */
+    .main-content-card {
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 20px;
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Стили для миниатюр */
+    .thumbnail-container {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    .thumbnail {
+        border: 2px solid transparent;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover {
+        border-color: var(--primary);
+        transform: translateY(-5px);
+    }
+
+    .thumbnail.active {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    }
+
+    /* Анимация появления */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+        animation: fadeIn 0.6s ease forwards;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb" class="mb-4 animate-in">
+            <ol class="breadcrumb bg-dark rounded-pill px-3 py-1 d-inline-flex">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'cars:index' %}" class="text-decoration-none">
+                        <i class="bi bi-house me-1"></i>Главная
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'cars:category' %}" class="text-decoration-none">Категории</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'cars:cars' car.cat.slug %}" class="text-decoration-none">{{ car.cat.title }}</a>
+                </li>
+                <li class="breadcrumb-item active text-light">{{ car.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Изображение автомобиля -->
+            <div class="col-lg-6 mb-4 animate-in" style="animation-delay: 0.1s;">
+                <div class="car-image-container">
+                    {% if car.image %}
+                    <img src="{{ car.image.url }}"
+                         class="car-main-image"
+                         alt="{{ car.name }}"
+                         id="mainCarImage">
+                    {% else %}
+                    <img src="{% static 'images/car-detail-banner.jpg' %}"
+                         class="car-main-image"
+                         alt="{{ car.name }}"
+                         id="mainCarImage">
+                    {% endif %}
+
+                    <!-- Бейдж просмотров -->
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-primary px-3 py-2">
+                            <i class="bi bi-eye me-1"></i>{{ car.views }} просмотров
+                        </span>
+                    </div>
+
+                    <!-- Бейдж статуса -->
+                    {% if car.is_active %}
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-success px-3 py-2">
+                            <i class="bi bi-check-circle me-1"></i>Активен
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Дополнительные изображения -->
+                {% if car.photos.exists %}
+                <div class="thumbnail-container">
+                    <h6 class="text-light mb-3">
+                        <i class="bi bi-images text-primary me-2"></i>Галерея
+                    </h6>
+                    <div class="row g-2">
+                        <!-- Основное изображение как первая миниатюра -->
+                        <div class="col-3">
+                            <div class="thumbnail active" onclick="changeMainImage('{{ car.image.url }}')">
+                                <div class="ratio ratio-1x1">
+                                    <img src="{{ car.image.url }}"
+                                         class="rounded-2"
+                                         alt="{{ car.name }}"
+                                         style="object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+
+                        {% for photo in car.photos.all|slice:":3" %}
+                        <div class="col-3">
+                            <div class="thumbnail" onclick="changeMainImage('{{ photo.image.url }}')">
+                                <div class="ratio ratio-1x1">
+                                    <img src="{{ photo.image.url }}"
+                                         class="rounded-2"
+                                         alt="{{ photo.title|default:car.name }}"
+                                         style="object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% if car.photos.count > 3 %}
+                        <div class="col-3">
+                            <div class="thumbnail" onclick="showAllPhotos()">
+                                <div class="ratio ratio-1x1 bg-dark d-flex align-items-center justify-content-center">
+                                    <div class="text-center">
+                                        <i class="bi bi-plus-circle fs-4 text-primary"></i>
+                                        <small class="d-block text-secondary mt-1">+{{ car.photos.count|add:"-3" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Основная информация -->
+            <div class="col-lg-6 animate-in" style="animation-delay: 0.2s;">
+                <div class="main-content-card h-100">
+                    <!-- Заголовок и цена -->
+                    <h1 class="car-title">{{ car.name }}</h1>
+
+                    {% if car.price %}
+                    <div class="car-price">
+                        ${{ car.price|floatformat:"0" }}
+                        <small class="text-secondary fs-6 d-block">Средняя рыночная цена</small>
+                    </div>
+                    {% endif %}
+
+                    <!-- Автор и дата -->
+                    {% if car.author %}
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-dark rounded-circle p-2 me-3">
+                            <i class="bi bi-person-fill text-primary fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-light fw-bold">{{ car.author.username }}</div>
+                            <small class="text-secondary">
+                                <i class="bi bi-calendar me-1"></i>
+                                {{ car.created|date:"d.m.Y H:i" }}
+                            </small>
+                        </div>
+                        <div class="ms-auto">
+                            <small class="text-secondary">
+                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                Обновлено: {{ car.updated|date:"d.m.Y" }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- ОПИСАНИЕ АВТОМОБИЛЯ (ИСПРАВЛЕННОЕ) -->
+                    <div class="car-description animate-in" style="animation-delay: 0.3s;">
+                        {{ car.description|linebreaks }}
+                    </div>
+
+                    <!-- Характеристики -->
+                    <div class="row g-3 mb-4">
+                        {% if car.year %}
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Год выпуска</div>
+                                        <div class="text-light fw-bold fs-5">{{ car.year }} г.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if car.horsepower %}
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-lightning-charge text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Мощность</div>
+                                        <div class="text-light fw-bold fs-5">{{ car.horsepower }} л.с.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if car.engine_volume %}
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-fuel-pump text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Объём двигателя</div>
+                                        <div class="text-light fw-bold fs-5">{{ car.engine_volume }} л</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if car.acceleration_0_100 %}
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-speedometer2 text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Разгон 0-100 км/ч</div>
+                                        <div class="text-light fw-bold fs-5">{{ car.acceleration_0_100 }} сек</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if car.top_speed %}
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-speedometer text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Макс. скорость</div>
+                                        <div class="text-light fw-bold fs-5">{{ car.top_speed }} км/ч</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="col-md-6">
+                            <div class="spec-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-folder text-primary fs-4 me-3"></i>
+                                    <div>
+                                        <div class="text-secondary small">Категория</div>
+                                        <a href="{% url 'cars:cars' car.cat.slug %}" class="text-light fw-bold fs-5 text-decoration-none">
+                                            {{ car.cat.title }} <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="d-flex flex-wrap gap-3 mt-4 pt-3 border-top border-secondary">
+                        <a href="{% url 'cars:cars' car.cat.slug %}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>К списку автомобилей
+                        </a>
+                        <a href="{% url 'cars:category' %}" class="btn btn-primary">
+                            <i class="bi bi-grid me-2"></i>Все категории
+                        </a>
+
+                        <!-- Социальные кнопки -->
+                        <div class="d-flex gap-2 ms-auto">
+                            <button class="btn btn-outline-primary btn-sm px-3">
+                                <i class="bi bi-heart me-1"></i>
+                                <span class="badge bg-primary ms-1">{{ car.likes.count }}</span>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm px-3">
+                                <i class="bi bi-share me-1"></i>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm px-3">
+                                <i class="bi bi-bookmark me-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Связанные автомобили -->
+        {% with related_cars=car.cat.cars.all|slice:":4" %}
+        {% if related_cars|length > 1 %}
+        <div class="row mt-5 animate-in" style="animation-delay: 0.4s;">
+            <div class="col-12">
+                <h3 class="text-white mb-4">
+                    <i class="bi bi-arrow-right-circle text-primary me-2"></i>
+                    Похожие автомобили в категории "{{ car.cat.title }}"
+                </h3>
+                <div class="row g-4">
+                    {% for related_car in related_cars %}
+                    {% if related_car.id != car.id %}
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{% url 'cars:car_detail' related_car.slug %}" class="text-decoration-none">
+                            <div class="card h-100 hover-lift">
+                                <div class="position-relative overflow-hidden" style="height: 180px;">
+                                    {% if related_car.image %}
+                                    <img src="{{ related_car.image.url }}"
+                                         class="card-img-top h-100"
+                                         alt="{{ related_car.name }}"
+                                         style="object-fit: cover; transition: transform 0.5s ease;">
+                                    {% else %}
+                                    <div class="h-100 bg-dark d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-car-front fs-1 text-primary"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <span class="badge bg-primary">{{ related_car.year|default:"-" }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title mb-2">{{ related_car.name }}</h5>
+                                    {% if related_car.price %}
+                                    <div class="text-primary fw-bold fs-5">${{ related_car.price|floatformat:"0" }}</div>
+                                    {% endif %}
+                                    <div class="d-flex justify-content-between mt-2">
+                                        {% if related_car.horsepower %}
+                                        <small class="text-secondary">
+                                            <i class="bi bi-lightning me-1"></i>{{ related_car.horsepower }} л.с.
+                                        </small>
+                                        {% endif %}
+                                        <small class="text-secondary">
+                                            <i class="bi bi-eye me-1"></i>{{ related_car.views }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+
+<script>
+    // Функция смены основного изображения
+    function changeMainImage(imageUrl) {
+        const mainImage = document.getElementById('mainCarImage');
+        if (mainImage) {
+            // Плавное исчезновение
+            mainImage.style.opacity = '0.5';
+            mainImage.style.transition = 'opacity 0.3s ease';
+
+            setTimeout(() => {
+                mainImage.src = imageUrl;
+                mainImage.style.opacity = '1';
+            }, 300);
+
+            // Убираем активный класс со всех миниатюр
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+
+            // Добавляем активный класс к нажатой миниатюре
+            event.target.closest('.thumbnail').classList.add('active');
+        }
+    }
+
+    // Функция показа всех фото
+    function showAllPhotos() {
+        alert('Функция просмотра всех фотографий будет реализована в ближайшее время!');
+        // В будущем можно сделать модальное окно с галереей
+    }
+
+    // Предзагрузка изображений
+    document.addEventListener('DOMContentLoaded', function() {
+        const mainImage = document.getElementById('mainCarImage');
+        if (mainImage) {
+            const img = new Image();
+            img.src = mainImage.src;
+            img.onload = function() {
+                console.log('Основное изображение загружено');
+                mainImage.style.opacity = '1';
+            };
+            img.onerror = function() {
+                mainImage.src = "{% static 'images/car-detail-banner.jpg' %}";
+            };
+        }
+
+        // Предзагрузка миниатюр
+        document.querySelectorAll('.thumbnail img').forEach(img => {
+            const preloadImg = new Image();
+            preloadImg.src = img.src;
+        });
+
+        // Анимация при наведении на карточки
+        document.querySelectorAll('.hover-lift').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1.05)';
+                }
+            });
+
+            card.addEventListener('mouseleave', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1)';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

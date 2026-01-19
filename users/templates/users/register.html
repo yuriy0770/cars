@@ -1,0 +1,113 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}AutoVault | Регистрация{% endblock %}
+
+{% block content %}
+<div class="py-5 mt-5">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <h2 class="text-white mb-2">Регистрация</h2>
+                    <p class="text-secondary">Создайте аккаунт, чтобы начать использовать все возможности</p>
+                </div>
+                
+                <!-- Сообщения -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                
+                <!-- Форма регистрации -->
+                <form method="POST" action="{% url 'users:register' %}">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Пожалуйста, исправьте ошибки ниже.
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label text-light">
+                            {{ form.username.label }}
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.username.errors }}
+                        </div>
+                        {% endif %}
+                        <small class="text-secondary">Только буквы, цифры и @/./+/-/_</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label text-light">
+                            {{ form.email.label }}
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.email.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label text-light">
+                            {{ form.password1.label }}
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.password1.errors }}
+                        </div>
+                        {% endif %}
+                        <small class="text-secondary">
+                            Пароль должен содержать не менее 8 символов, включать буквы и цифры
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label text-light">
+                            {{ form.password2.label }}
+                        </label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.password2.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label text-secondary" for="terms">
+                            Я согласен с <a href="#" class="text-primary">условиями использования</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn mb-3">
+                        <i class="bi bi-person-plus me-2"></i>Зарегистрироваться
+                    </button>
+                    
+                    <div class="auth-links">
+                        <p class="text-secondary mb-0">
+                            Уже есть аккаунт? 
+                            <a href="{% url 'users:login' %}">Войдите</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

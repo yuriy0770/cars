@@ -4,6 +4,7 @@ from .models import Category, Cars, Article
 
 
 class Template(TemplateView):
+    '''Главная страница'''
     template_name = 'cars/index.html'
 
 

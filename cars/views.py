@@ -9,6 +9,7 @@ class Template(TemplateView):
 
 
 class CategoryList(ListView):
+    '''Список категорий'''
     model = Category
     context_object_name = "category"
     template_name = 'cars/category_list.html'
